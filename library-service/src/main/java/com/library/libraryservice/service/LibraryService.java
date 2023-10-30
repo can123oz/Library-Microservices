@@ -31,8 +31,8 @@ public class LibraryService {
         LibraryDto libraryDto = new LibraryDto(library.getId(),
                 library.getUserBook()
                         .stream()
-                        .map(bookServiceClient::getBookDetailsById)
                         //.map(bookId -> bookServiceClient.getBookDetailsById(bookId)) // üst satır ile aynı şey
+                        .map(bookServiceClient::getBookDetailsById)
                         .map(ResponseEntity::getBody)
                         .collect(Collectors.toList()));
         return libraryDto;
@@ -62,8 +62,15 @@ public class LibraryService {
                                 .stream()
                                 .map(bookId ->
                                         bookServiceClient.getBookDetailsById(bookId)
-                                                .getBody()
-                ).collect(Collectors.toList()))).collect(Collectors.toList());
+                                                .getBody())
+                                .collect(Collectors.toList()))).collect(Collectors.toList());
+    }
+
+    public List<String> getAllLibraryIds() {
+        return libraryRepository.findAll()
+                .stream()
+                .map(library -> library.getId())
+                .collect(Collectors.toList());
     }
 
 
